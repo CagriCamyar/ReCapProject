@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DataAccess.Abstract
 {
     public interface ICarDal
-    {
+    { 
         List<Car> GetAll();
         List<Car> GetById(long nationalityid);
         void Add(Car car);
