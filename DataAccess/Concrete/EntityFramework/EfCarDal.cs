@@ -1,12 +1,15 @@
 ﻿using DataAccess.Abstract;
+using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -38,13 +41,12 @@ namespace DataAccess.Concrete.EntityFramework
             {
                 return context.Set<Car>().SingleOrDefault(filter);
             }
-
         }
 
         public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
         {
             using (ReCapProjectDbContext context = new ReCapProjectDbContext())
-            {
+            {               
                 return filter == null ? context.Set<Car>().ToList() : context.Set<Car>().Where(filter).ToList(); 
             }
         }
