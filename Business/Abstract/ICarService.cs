@@ -1,21 +1,23 @@
-﻿using Entities.Concrete;
+﻿using Core.Utilities.Result;
+using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
     public interface ICarService
     {
-        List<Car> GetAll();
-        List<Car> GetCarsByBrandId (int id);
-        List<Car> GetCarsByColourId (int id);
-        List<Car> GetByDailyPrice (decimal min, decimal max);
-        public void NameMinTwoChars(Car car);
-        public void DailyPriceMoreThanZero(Car car);
-        List<CarDetailDto> GetCarDetails();
+        IDataResult<List<Car>> GetAll();
+        IDataResult<List<Car>> GetCarsByBrandId (int id);
+        IDataResult<List<Car>> GetCarsByColourId (int id);
+        IDataResult<List<Car>> GetByDailyPrice (decimal min, decimal max);
+        IResult NameMinTwoChars(Car car);
+        IResult DailyPriceMoreThanZero(Car car);
+        IDataResult<List<CarDetailDto>> GetCarDetails();
+        IResult Add(Car car);
     }
 }

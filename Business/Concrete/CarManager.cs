@@ -1,15 +1,19 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities;
+using Core.Utilities.Result;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Concrete
-{ 
+{
     public class CarManager : ICarService
     {
         ICarDal _carDal;
@@ -19,55 +23,61 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void DailyPriceMoreThanZero(Car car)
+        public IResult Add(Car car)
+        { 
+            _carDal.Add(car);
+            return new Result(true, "Kiralama Başarılı!");
+        }
+
+        public IResult DailyPriceMoreThanZero(Car car)
         {
-            if (car.DailyPrice >0)
+            if (car.DailyPrice <= 0 )
             {
-                _carDal.Add(car);
-                Console.WriteLine("New Car Added!");
+                return new ErrorResult(Messages.CarPriceInvalid);
             }
-            else
+            return new SuccessResult(Messages.CarAdded);
+        }
+
+        public IDataResult<List<Car>> GetAll()
+        {
+            if (DateTime.Now.Hour == 2 )
             {
-                Console.WriteLine("Wants to Added Car's Daily Price needs to more than 0 liras.");
+                return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
             }
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarsListed);
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetByDailyPrice(decimal min, decimal max)
         {
-            return _carDal.GetAll();
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.DailyPrice >= min && c.DailyPrice <= max));
         }
 
-        public List<Car> GetByDailyPrice(decimal min, decimal max)
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            return _carDal.GetAll(c => c.DailyPrice >= min && c.DailyPrice <= max);
-        }
-
-        public List<CarDetailDto> GetCarDetails()
-        {
-                return _carDal.GetCarDetails();
-        }
-
-        public List<Car> GetCarsByBrandId(int id)
-        {
-            return _carDal.GetAll(c=> c.BrandId == id);
-        }
-
-        public List<Car> GetCarsByColourId(int id)
-        {
-            return _carDal.GetAll(c=> c.ColourId == id);
-        }
-
-        public void NameMinTwoChars(Car car)
-        {
-            if (car.Description.Length >= 2)
+            if (DateTime.Now.Hour >2 )
             {
-                _carDal.Add(car);
-                Console.WriteLine("New Car Added!");
+                return new ErrorDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(), Messages.MaintenanceTime);
             }
-            else
+                return new SuccessDataResult<List<CarDetailDto>>( _carDal.GetCarDetails());
+        }
+
+        public IDataResult<List<Car>> GetCarsByBrandId(int id)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c=> c.BrandId == id));
+        }
+
+        public IDataResult<List<Car>> GetCarsByColourId(int id)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ColourId == id));
+        }
+
+        public IResult NameMinTwoChars(Car car)
+        {
+            if (car.Description.Length < 2)
             {
-                Console.WriteLine("Added Car Name needs to minimum 2 characters.");
+                return new ErrorResult(Messages.CarNameInvalid);
             }
+           return new SuccessResult(Messages.CarAdded);
         }
     }
 }
