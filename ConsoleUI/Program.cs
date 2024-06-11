@@ -1,10 +1,8 @@
-﻿using Business.Abstract;
-using Business.Concrete;
+﻿using Business.Concrete;
+using Business.Constants;
 using DataAccess.Concrete.EntityFramework;
-using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
-using System;
 
 namespace ConsoleUI
 {
@@ -12,22 +10,38 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
+            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
 
-            CarManager carManager = new CarManager(new EfCarDal());
-
-            var result = carManager.GetCarDetails();
-             
-            if (result.Success == true )
+            var result = customerManager.GetCustomerDetails();
+            if (result.Success)
             {
-                foreach (var car in result.Data)
+                foreach (var customer in result.Data)
                 {
-                    Console.WriteLine(car.Description + "/"+ result.Message);
+                    Console.WriteLine(customer.FirstName + " " + customer.LastName + " " + customer.CompanyName + " " + customer.Email + " " + customer.Password);
                 }
             }
             else
             {
                 Console.WriteLine(result.Message);
             }
+
+
+            //    CarManager carManager = new CarManager(new EfCarDal());
+
+            //    var result = carManager.GetCarDetails();
+
+            //    if (result.Success == true)
+            //    {
+            //        Console.WriteLine(Messages.CarsListed);
+            //        foreach (var car in result.Data)
+            //        {                   
+            //            Console.WriteLine(car.Description);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine(result.Message);
+            //    }
 
 
             //foreach (CarDetailDto carDetailDto in carManager.GetCarDetails())

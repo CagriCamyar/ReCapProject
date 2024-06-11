@@ -26,7 +26,7 @@ namespace Business.Concrete
         public IResult Add(Car car)
         { 
             _carDal.Add(car);
-            return new Result(true, "Kiralama Başarılı!");
+            return new SuccessResult(Messages.CarAdded);
         }
 
         public IResult DailyPriceMoreThanZero(Car car)
@@ -40,7 +40,7 @@ namespace Business.Concrete
 
         public IDataResult<List<Car>> GetAll()
         {
-            if (DateTime.Now.Hour == 2 )
+            if (DateTime.Now.Hour == 3 )
             {
                 return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
             }
@@ -54,7 +54,7 @@ namespace Business.Concrete
 
         public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            if (DateTime.Now.Hour >2 )
+            if (DateTime.Now.Hour == 2 )
             {
                 return new ErrorDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(), Messages.MaintenanceTime);
             }
