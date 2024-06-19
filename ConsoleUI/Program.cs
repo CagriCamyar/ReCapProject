@@ -11,16 +11,8 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            //Results();
-            if (DateTime.Now.Minute == 19)
-            {
-                Console.WriteLine("Selam");
-
-            }
-            else
-            {
-                Console.WriteLine("As");
-            }
+            Results();
+         
 
             //    CarManager carManager = new CarManager(new EfCarDal());
 
